@@ -25,7 +25,7 @@ public class PaymentService {
    @Autowired
    private IAccountService accountService;
 
-    @Value("${app.saldo.service.url}")
+    @Value("${app.security.service.url}")
     private String serviceUrl;
     RestTemplate restTemplate= new RestTemplate();
 
@@ -98,7 +98,7 @@ public class PaymentService {
         map.add("grant_type","password");
         HttpEntity<?> requestEntity = new HttpEntity<>(map,headers);
 
-        String urlToken = "http://localhost:8080/oauth/token";
+        String urlToken = "http://"+serviceUrl+"/oauth/token";
 
         ResponseEntity<TokenDto> response = restTemplate.exchange(urlToken,HttpMethod.POST,requestEntity, TokenDto.class);
         TokenDto tokenDto= response.getBody();
