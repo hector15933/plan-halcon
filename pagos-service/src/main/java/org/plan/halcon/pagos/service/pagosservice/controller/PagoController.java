@@ -8,6 +8,7 @@ import org.plan.halcon.pagos.service.pagosservice.model.entity.PagoResponse;
 import org.plan.halcon.pagos.service.pagosservice.model.service.IAccountService;
 import org.plan.halcon.pagos.service.pagosservice.model.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,9 @@ import java.util.Optional;
 @Slf4j
 @RestController
 public class PagoController {
+
+    @Value("${app.saldo.service.url}")
+    private String serviceUrl;
 
     @Autowired
     private PaymentService paymentService;
@@ -67,7 +71,7 @@ public class PagoController {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<BigDecimal> responseHttp =  restTemplate.exchange(
-                "http://localhost:8081/api/saldo/consultar-saldo"+"?account_id="+id,
+                "http://"+serviceUrl+"/api/saldo/consultar-saldo"+"?account_id="+id,
                 HttpMethod.GET,requestEntity,BigDecimal.class);
         return responseHttp.getBody();
     }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.plan.halcon.pagos.service.pagosservice.model.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -24,6 +25,8 @@ public class PaymentService {
    @Autowired
    private IAccountService accountService;
 
+    @Value("${app.saldo.service.url}")
+    private String serviceUrl;
     RestTemplate restTemplate= new RestTemplate();
 
     @Transactional
@@ -71,7 +74,7 @@ public class PaymentService {
         HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
 
-        String url= "http://localhost:8080/exchangeRate?currencyFrom="+monedaOrigen+"&currencyTo="+monedaDestino+"&amount="+1000.00;
+        String url= "http://"+serviceUrl+"/exchangeRate?currencyFrom="+monedaOrigen+"&currencyTo="+monedaDestino+"&amount="+1000.00;
         ResponseEntity<CurrencyConversionResult> responseHttp= restTemplate.exchange(url,HttpMethod.GET,requestEntity,CurrencyConversionResult.class);
 
         CurrencyConversionResult currencyConversionResult=responseHttp.getBody();
